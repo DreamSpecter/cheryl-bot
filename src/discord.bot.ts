@@ -53,25 +53,26 @@ export class DiscordBot {
     }
 
     handleMessageAndAnswer(message: Message): string | void {
-        if(message.content==='ping'){
+        const messageContent = message.content.toLowerCase();
+        if(messageContent==='ping'){
             return 'pong';
         }
-        if(message.content==='marco'){
+        if(messageContent==='marco'){
             return 'polo';
         }
-        if(message.content==='schatzi'){
+        if(messageContent==='schatzi'){
             return 'ja';
         }
-        if(message.content==='Nya'){
+        if(messageContent==='Nya'){
             return 'Meow';
         }
-        if(message.content==='wie gehts?'){
+        if(messageContent==='wie gehts?'){
             return 'ausgesprochen gut und dir?';
         }
-        if(message.content==='gut'){
+        if(messageContent==='gut'){
             return 'dies freut mich sehr';
         }
-        if(message.content==='Cheryl du bist cool'){
+        if(messageContent==='cheryl du bist cool'){
             return 'das ist sehr nett, ich kann dies nur erwiedern';
         }
         // if (this.isInconsequential(message)) return;
