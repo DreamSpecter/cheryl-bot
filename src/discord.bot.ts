@@ -76,6 +76,7 @@ export class DiscordBot {
 
             return 'hmm?';
         }
+        if (messageContent === '?help') return 'can assign role with command `?assign role <Rolename>`';         
         if(this.isAssignRoleCommand(messageContent)){
             const rolepoint = 'role';
             if (messageContent.indexOf(rolepoint) == -1) return 'specify what to assign: role';
