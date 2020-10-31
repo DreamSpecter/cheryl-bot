@@ -53,7 +53,7 @@ export class DiscordBot {
     }
 
     handleMessageAndAnswer(message: Message): string | void {
-        if(message.author.bot) return;
+        if(message.author.bot || this.isInconsequential(message)) return;
 
         const messageContent = message.content.toLowerCase();
 
@@ -63,82 +63,45 @@ export class DiscordBot {
         if(messageContent==='marco'){
             return 'polo';
         }
-        if(messageContent==='schatzi'){
-            return 'ja';
-        }
         if(messageContent==='Nya'){
             return 'Meow';
         }
-        if(messageContent==='gut'){
-            return 'dies freut mich sehr';
-        }
         if(messageContent.startsWith('cheryl')){
-            if(messageContent==='cheryl du bist cool'){
-                return 'das ist sehr nett, ich kann dies nur erwiedern';
+            if(messageContent==='cheryl you\'re cool'){
+                return 'that is nice, you are as well';
             }
-            if(messageContent==='cheryl wie gehts dir?'){
-                return 'ausgesprochen gut und dir?';
+            if(messageContent==='cheryl how are you?'){
+                return 'I am good, how are you?';
             }
 
             return 'hmm?';
         }
-        if(messageContent.startsWith('?assign')){
-            const userpoint = 'user';
+        if(this.isAssignRoleCommand(messageContent)){
+            const author = message.author;
             const rolepoint = 'role';
-            const userindex = messageContent.indexOf(userpoint)
             const roleindex = messageContent.indexOf(rolepoint)
-            const user = message.content.substring(userindex+userpoint.length, roleindex).trim();
             const roleString = messageContent.substring(roleindex+rolepoint.length).trim();
             const role = message.guild?.roles.cache.find(role => role.name.toLowerCase() === roleString);
-            const member = message.guild?.members.cache.find(member => member.nickname === user || member.displayName === user );
+            const member = message.guild?.members.cache.find(member => member.user === author);
+
             if(role && member) member.roles.add(role);
-            else {
-                return !role ? `Unbekannte Rolle${!member ? 'und unbekannter User' : ''}` : 'Unbekannter User';
-            }
+            else return 'unknown role';
         }
-        // if (this.isInconsequential(message)) return;
-
-        //     const messageContentParts = message.content.split(' ');
-
-        //     if (this.isAssignRoleCommand(message) && messageContentParts.length >= 3) {
-        //         const role = messageContentParts[1];
-        //         const user = messageContentParts[2];
-
-        //         if(this.hasRoleToAssign(role, message.guild?.roles)) {
-        //             await message.channel.send('yes');
-        //             return;
-        //         }
-        //         // const authorRoles = message.guild.member(message.author)?.roles;
-        //         // const role = message.mentions.roles.first();
-        //         // const members = message.mentions.members;
-        //         // if(role) {
-        //         //   members?.forEach(member => member.roles.add(role));
-        //         // } else {
-        //         //   await message.reply('no roles specified');
-        //         // }
-        //     }
-        //     await message.channel.send('no');
     }
 
-    // isInconsequential(message: Message): boolean {
-    //     return this.isBotMessage(message) || this.isNonServerMessage(message)
-    // }
+    isInconsequential(message: Message): boolean {
+        return this.isBotMessage(message) || this.isNonServerMessage(message)
+    }
 
-    // isAssignRoleCommand(message: Message): boolean {
-    //     return message.content.startsWith('?assign')
-    // }
+    isAssignRoleCommand(messageContent: string): boolean {
+        return messageContent.startsWith('?assign')
+    }
 
-    // hasRoleToAssign(role: string, roles?: RoleManager): boolean {
-    //     return !!roles?.cache.find(r => {
-    //         return r.name === role;
-    //     }); 
-    // }
+    private isBotMessage(message: Message): boolean {
+        return message.author.bot
+    }
 
-    // private isBotMessage(message: Message): boolean {
-    //     return message.author.bot
-    // }
-
-    // private isNonServerMessage(message: Message): boolean {
-    //     return !message.guild
-    // }
+    private isNonServerMessage(message: Message): boolean {
+        return !message.guild
+    }
 }
