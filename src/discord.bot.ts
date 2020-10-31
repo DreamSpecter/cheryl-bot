@@ -57,26 +57,8 @@ export class DiscordBot {
 
         const messageContent = message.content.toLowerCase();
 
-        if(messageContent==='ping'){
-            return 'pong';
-        }
-        if(messageContent==='marco'){
-            return 'polo';
-        }
-        if(messageContent==='Nya'){
-            return 'Meow';
-        }
-        if(messageContent.startsWith('cheryl')){
-            if(messageContent==='cheryl you\'re cool'){
-                return 'that is nice, you are as well';
-            }
-            if(messageContent==='cheryl how are you?'){
-                return 'I am good, how are you?';
-            }
-
-            return 'hmm?';
-        }
         if (messageContent === '?help') return 'can assign role with command `?assign role <Rolename>`';         
+        
         if(this.isAssignRoleCommand(messageContent)){
             const rolepoint = 'role';
             if (messageContent.indexOf(rolepoint) == -1) return 'specify what to assign: role';
