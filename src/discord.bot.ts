@@ -53,7 +53,10 @@ export class DiscordBot {
     }
 
     handleMessageAndAnswer(message: Message): string | void {
+        if(message.author.bot) return;
+
         const messageContent = message.content.toLowerCase();
+
         if(messageContent==='ping'){
             return 'pong';
         }
@@ -66,14 +69,32 @@ export class DiscordBot {
         if(messageContent==='Nya'){
             return 'Meow';
         }
-        if(messageContent==='wie gehts?'){
-            return 'ausgesprochen gut und dir?';
-        }
         if(messageContent==='gut'){
             return 'dies freut mich sehr';
         }
-        if(messageContent==='cheryl du bist cool'){
-            return 'das ist sehr nett, ich kann dies nur erwiedern';
+        if(messageContent.startsWith('cheryl')){
+            if(messageContent==='cheryl du bist cool'){
+                return 'das ist sehr nett, ich kann dies nur erwiedern';
+            }
+            if(messageContent==='cheryl wie gehts dir?'){
+                return 'ausgesprochen gut und dir?';
+            }
+
+            return 'hmm?';
+        }
+        if(messageContent.startsWith('?assign')){
+            const userpoint = 'user';
+            const rolepoint = 'role';
+            const userindex = messageContent.indexOf(userpoint)
+            const roleindex = messageContent.indexOf(rolepoint)
+            const user = message.content.substring(userindex+userpoint.length, roleindex).trim();
+            const roleString = messageContent.substring(roleindex+rolepoint.length).trim();
+            const role = message.guild?.roles.cache.find(role => role.name.toLowerCase() === roleString);
+            const member = message.guild?.members.cache.find(member => member.nickname === user || member.displayName === user );
+            if(role && member) member.roles.add(role);
+            else {
+                return !role ? `Unbekannte Rolle${!member ? 'und unbekannter User' : ''}` : 'Unbekannter User';
+            }
         }
         // if (this.isInconsequential(message)) return;
 
