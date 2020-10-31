@@ -77,8 +77,10 @@ export class DiscordBot {
             return 'hmm?';
         }
         if(this.isAssignRoleCommand(messageContent)){
-            const author = message.author;
             const rolepoint = 'role';
+            if (messageContent.indexOf(rolepoint) == -1) return 'specify what to assign: role';
+
+            const author = message.author;
             const roleindex = messageContent.indexOf(rolepoint)
             const roleString = messageContent.substring(roleindex+rolepoint.length).trim();
             const role = message.guild?.roles.cache.find(role => role.name.toLowerCase() === roleString);
