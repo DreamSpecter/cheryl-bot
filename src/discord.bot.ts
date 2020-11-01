@@ -57,9 +57,9 @@ export class DiscordBot {
 
         const messageContent = message.content.toLowerCase();
 
-        if (messageContent === '?help') return 'can assign role with command `?assign role <Rolename>`';         
+        if (messageContent === '?help') return 'can assign role with command `?assign role <Rolename>` or remove role with command `?remove role <Rolename>`';         
         
-        if(this.isAssignRoleCommand(messageContent)){
+        if(this.isAssignRoleCommand(messageContent)) {
             const rolepoint = 'role';
             if (messageContent.indexOf(rolepoint) == -1) return 'specify what to assign: role';
 
@@ -69,8 +69,26 @@ export class DiscordBot {
             const role = message.guild?.roles.cache.find(role => role.name.toLowerCase() === roleString);
             const member = message.guild?.members.cache.find(member => member.user === author);
 
-            if(role && member) member.roles.add(role);
-            else return 'unknown role';
+            if(role && member) {
+                member.roles.add(role);
+                return `${role.name} now assigned to ${member.displayName}`;
+            } else return 'unknown role';
+        }
+
+        if(messageContent.startsWith('?remove')) {
+            const rolepoint = 'role';
+            if (messageContent.indexOf(rolepoint) == -1) return 'specify what to remove: role';
+
+            const author = message.author;
+            const roleindex = messageContent.indexOf(rolepoint)
+            const roleString = messageContent.substring(roleindex+rolepoint.length).trim();
+            const role = message.guild?.roles.cache.find(role => role.name.toLowerCase() === roleString);
+            const member = message.guild?.members.cache.find(member => member.user === author);
+
+            if(role && member) {
+                member.roles.remove(role);
+                return `${role.name} now removed from ${member.displayName}`;
+            } else return 'unknown role';
         }
     }
 
