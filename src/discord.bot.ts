@@ -57,7 +57,7 @@ export class DiscordBot {
 
         const messageContent = message.content.toLowerCase();
 
-        if (messageContent === '?help') return 'can assign role with command `?assign role <Rolename>` or remove role with command `?remove role <Rolename>`';         
+        if (messageContent === '?help') return 'can assign role with command `?assign role Rolename` or remove role with command `?remove role Rolename`';         
         
         if(this.isAssignRoleCommand(messageContent)) {
             const rolepoint = 'role';
