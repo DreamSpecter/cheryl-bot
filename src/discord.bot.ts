@@ -1,10 +1,17 @@
-import { Client, Message } from 'discord.js'
+import { Client, Intents, Message } from 'discord.js'
 
 export class DiscordBot {
     // #region copied code
     private static instance: DiscordBot | undefined;
 
-    private client: Client = new Client();
+    private client: Client = new Client({
+        intents: [
+            Intents.FLAGS.GUILDS,
+            Intents.FLAGS.GUILD_MESSAGES, 
+            Intents.FLAGS.DIRECT_MESSAGES
+        ],
+        partials: ['MESSAGE', 'CHANNEL']
+    });
 
     private constructor() {
         this.initializeCient()
@@ -45,10 +52,9 @@ export class DiscordBot {
     }
 
     private setMessageHandler(): void {
-        this.client.on('message', async (message: Message) => {
+        this.client.on('messageCreate', (message: Message) => {
             const answer = this.handleMessageAndAnswer(message)
-
-            if (answer) await message.channel.send(answer);
+            if (answer) message.channel.send(answer);
         })
     }
 
@@ -67,7 +73,7 @@ export class DiscordBot {
             const roleindex = messageContent.indexOf(rolepoint)
             const roleString = messageContent.substring(roleindex+rolepoint.length).trim();
             const role = message.guild?.roles.cache.find(role => role.name.toLowerCase() === roleString);
-            const member = message.guild?.members.cache.find(member => member.user === author);
+            const member = message.guild?.members.cache.get(author.id);
 
             if(role && member) {
                 member.roles.add(role);
@@ -83,7 +89,7 @@ export class DiscordBot {
             const roleindex = messageContent.indexOf(rolepoint)
             const roleString = messageContent.substring(roleindex+rolepoint.length).trim();
             const role = message.guild?.roles.cache.find(role => role.name.toLowerCase() === roleString);
-            const member = message.guild?.members.cache.find(member => member.user === author);
+            const member = message.guild?.members.cache.get(author.id);
 
             if(role && member) {
                 member.roles.remove(role);
