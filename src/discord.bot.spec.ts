@@ -44,20 +44,13 @@ describe('DiscordBot', () => {
         expect(answer).toBeUndefined();
     });
 
-    test('should return "command incorrectly used, format is: `?assign role user`" when role and user missing', () => {   
+    test('should return "specify what to assign: role" when role and user missing', () => {   
         const author = {bot: false} as unknown as User;
         const guild = {name: 'some guild'} as unknown as Guild;
         const message = {author: author, guild: guild, content: '?assign'} as unknown as Message;
 
         const answer = bot.handleMessageAndAnswer(message);
 
-        expect(answer).toEqual('command incorrectly used, format is: `?assign role user`');
+        expect(answer).toEqual('specify what to assign: role');
     });
-    // test('should ', () => {    });
-    // test('should ', () => {    });
-    // test('should ', () => {    });
-    // test('should ', () => {    });
-    // test('should ', () => {    });
-    // test('should ', () => {    });
-    // test('should ', () => {    });
 });
